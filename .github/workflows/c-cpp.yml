@@ -23,7 +23,7 @@ jobs:
         name: compiled-binary
         path: build/a.out
 
-  run-bi jobnary:
+  runbinary:
     runs-on: ubuntu-latest
     needs: build
 
