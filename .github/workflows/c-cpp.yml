@@ -2,23 +2,38 @@ name: C/C++ CI with CMake
 
 on:
   push:
-  pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Install CMake
       run: sudo apt-get install -y cmake
     - name: Configure with CMake
-      run: cmake -S . -B build
+      run: |
+        cmake -S . -B build
     - name: Build with CMake
-      run: cmake --build build
+      run: |
+        cmake --build build
     - name: Upload Binary as Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: compiled-binary
         path: build/a.out
+
+  run-binary:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: compiled-binary
+        path: .
+    - name: Make Binary Executable
+      run: chmod +x a.out
+    - name: Run Binary
+      run: |
+        echo -e "5\n3\n+\n" | ./a.out
